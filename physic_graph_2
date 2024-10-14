@@ -1,0 +1,44 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Constants
+k = 5.0  # Spring constant (N/m)
+x0 = 1.0  # Initial displacement (m)
+b_underdamped = 0.2  # Damping coefficient for underdamped
+b_critical = 2.0  # Damping coefficient for critically damped
+b_overdamped = 3.0  # Damping coefficient for overdamped
+
+# Input mass from the user
+m = float(input("Enter the value of mass (kg): "))
+
+# Natural frequency
+omega_0 = np.sqrt(k / m)
+
+# Time array
+t = np.linspace(0, 100, 500)
+
+# Underdamped case
+gamma_underdamped = b_underdamped / m
+omega_underdamped = np.sqrt(omega_0**2 - (gamma_underdamped / 2)**2)
+x_underdamped = x0 * np.exp(-gamma_underdamped * t / 2) * (np.cos(omega_underdamped * t) + (gamma_underdamped / (2 * omega_underdamped)) * np.sin(omega_underdamped * t))
+
+# Critically damped case
+gamma_critical = b_critical / m
+x_critical = x0 * (1 + gamma_critical * t / 2) * np.exp(-gamma_critical * t / 2)
+
+# Overdamped case
+gamma_overdamped = b_overdamped / m
+beta = np.sqrt((gamma_overdamped / 2)**2 - omega_0**2)
+x_overdamped = x0 * 0.5 * np.exp(-(gamma_overdamped / 2 + beta) * t) + x0 * 0.5 * np.exp(-(gamma_overdamped / 2 - beta) * t)
+
+# Plotting the results
+plt.figure(figsize=(10, 6))
+plt.plot(t, x_underdamped, label="Underdamped", color='black')
+plt.plot(t, x_critical, label="Critically damped", color='blue', linestyle='--')
+plt.plot(t, x_overdamped, label="Overdamped", color='red', linestyle=':')
+plt.xlabel('Time (s)')
+plt.ylabel('Displacement (m)')
+plt.title('Damping in a Spring-Mass System')
+plt.legend()
+plt.grid(True)
+plt.show()
